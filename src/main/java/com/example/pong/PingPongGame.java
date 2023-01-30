@@ -6,6 +6,7 @@ import javafx.application.Application;
 
 import javafx.scene.Scene;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
@@ -54,8 +55,20 @@ public class PingPongGame extends Application {
         tl.setCycleCount(Timeline.INDEFINITE);
 
         //mouse control (move and click)
-        canvas.setOnMouseMoved(e ->  playerOneYPos  = e.getY());
-        canvas.setOnMouseClicked(e ->  gameStarted = true);
+        canvas.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.UP) {
+                playerOneYPos -= 40;
+            } else if (e.getCode() == KeyCode.DOWN) {
+                playerOneYPos += 40;
+            }
+        });
+        canvas.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.SPACE) {
+                gameStarted = true;
+            }
+        });
+        canvas.setFocusTraversable(true);
+        canvas.requestFocus();
         stage.setScene(new Scene(new StackPane(canvas)));
         stage.show();
         tl.play();
@@ -89,7 +102,7 @@ public class PingPongGame extends Application {
             //set the start text
             gc.setStroke(Color.WHITE);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.strokeText("Click", width / 2, height / 2);
+            gc.strokeText("Espacio para empezar", width / 2, height / 2);
 
             //reset the ball start position
             ballXPos = width / 2;
