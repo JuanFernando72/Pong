@@ -147,6 +147,12 @@ public class PingPongGame extends Application {
         //draw score
         gc.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 40));
         gc.fillText(scoreP1 + "\t\t\t\t\t\t\t\t" + scoreP2, width / 2, 100);
+
+        gc.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 40));
+        gc.strokeText("|", width / 2, height / 14);
+
+
+
         //draw player 1 & 2
         gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
         gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
