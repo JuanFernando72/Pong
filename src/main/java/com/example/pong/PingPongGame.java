@@ -8,19 +8,14 @@ import javafx.scene.Scene;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-
 import java.util.Random;
-
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
 import javafx.util.Duration;
 
 public class PingPongGame extends Application {
@@ -42,9 +37,11 @@ public class PingPongGame extends Application {
     private boolean gameStarted;
     private int playerOneXPos = 0;
     private double playerTwoXPos = width - PLAYER_WIDTH;
-
+    double playerTwoYDirection = 1;
+    double playerOneYDirection= 1;
+    double paddleHeight = 1;
     public void start(Stage stage) throws Exception {
-        stage.setTitle("P O N G");
+        stage.setTitle("PING PONG");
         //background size
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -54,13 +51,18 @@ public class PingPongGame extends Application {
         //number of cycles in animation INDEFINITE = repeat indefinitely
         tl.setCycleCount(Timeline.INDEFINITE);
 
-        //mouse control (move and click)
+        //keyboard control (move and space)
         canvas.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.UP) {
-                playerOneYPos -= 40;
+            if (e.getCode() == KeyCode.W) {
+                playerOneYPos -= 10;
+            } else if (e.getCode() == KeyCode.S) {
+                playerOneYPos += 10;
+            } else if (e.getCode() == KeyCode.UP) {
+                playerTwoYPos -= 10;
             } else if (e.getCode() == KeyCode.DOWN) {
-                playerOneYPos += 40;
+                playerTwoYPos += 10;
             }
+
         });
         canvas.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.SPACE) {
@@ -89,12 +91,6 @@ public class PingPongGame extends Application {
             ballXPos+=ballXSpeed;
             ballYPos+=ballYSpeed;
 
-            //simple computer opponent who is following the ball
-            if(ballXPos < width - width  / 4) {
-                playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
-            }  else {
-                playerTwoYPos =  ballYPos > playerTwoYPos + PLAYER_HEIGHT / 2 ?playerTwoYPos += 1: playerTwoYPos - 1;
-            }
             //draw the ball
             gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
 
@@ -102,6 +98,7 @@ public class PingPongGame extends Application {
             //set the start text
             gc.setStroke(Color.WHITE);
             gc.setTextAlign(TextAlignment.CENTER);
+            gc.setFont(Font.font("Papyrus", FontWeight.EXTRA_BOLD, 40));
             gc.strokeText("Espacio para empezar", width / 2, height / 2);
 
             //reset the ball start position
@@ -136,8 +133,19 @@ public class PingPongGame extends Application {
             ballXSpeed *= -1;
             ballYSpeed *= -1;
         }
-
+        //Aqui para que no se desborden las paletas
+        if (playerOneYPos <= 0) {
+            playerOneYPos = 0;
+        } else if (playerOneYPos >= height - PLAYER_HEIGHT) {
+            playerOneYPos = height - PLAYER_HEIGHT;
+        }
+        if (playerTwoYPos <= 0) {
+            playerTwoYPos = 0;
+        } else if (playerTwoYPos >= height - PLAYER_HEIGHT) {
+            playerTwoYPos = height - PLAYER_HEIGHT;
+        }
         //draw score
+        gc.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 40));
         gc.fillText(scoreP1 + "\t\t\t\t\t\t\t\t" + scoreP2, width / 2, 100);
         //draw player 1 & 2
         gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
